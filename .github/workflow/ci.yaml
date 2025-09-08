@@ -1,0 +1,23 @@
+name: C++ Microservice CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake g++ make git
+
+    - name: Build project
+      run: cmake -S . -B build && cmake --build build
+
+    - name: Run tests
+      run: cd build && ctest --output-on-failure
