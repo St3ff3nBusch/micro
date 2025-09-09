@@ -4,7 +4,7 @@
 #      gcc gcc-c++ make \
 #      cmake git wget unzip  && \
 #      dnf clean all
-From ghcr.io/st3ff3nbusch/sevice:latest
+From ghcr.io/st3ff3nbusch/service:latest
 RUN dnf install -y wget
 WORKDIR /app
 COPY . .
