@@ -1,0 +1,49 @@
+name: Generate and Deploy Protobuf Documentation
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build-and-deploy-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - uses: actions/checkout@v3
+
+      # 2. Install Protobuf compiler
+      - name: Install Protobuf Compiler
+        run: |
+          sudo apt update
+          sudo apt install -y protobuf-compiler
+
+      # 3. Install Go (required for protoc-gen-doc)
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      # 4. Install protoc-gen-doc
+      - name: Install protoc-gen-doc
+        run: |
+          go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      # 5. Generate HTML documentation
+      - name: Generate HTML Docs
+        run: |
+          mkdir -p docs
+          # HTML
+          protoc --doc_out=./docs --doc_opt=html,index.html proto/*.proto
+          # Markdown
+          protoc --doc_out=./docs --doc_opt=markdown,proto_docs.md proto/*.proto
+
+      # 6. Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
