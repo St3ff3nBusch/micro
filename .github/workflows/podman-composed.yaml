@@ -34,9 +34,17 @@ jobs:
         run: sleep 15
 
       - name: Run integration / health checks
+        id: grpc-test
         run: |
-          curl -f http://localhost:50051 || echo "gRPC service may not have HTTP endpoint"
+          set -o pipefail
+          podman-compose -f podman-composed.yaml run --rm service_c 2>&1 | tee service_c_output.log
 
+      - name: Check Service C result and report error
+        if: failure()  # Only runs if the previous step failed
+        run: |
+            echo "::error ::Service C failed! Output below:"
+            cat service_c_output.log
+            exit 1
       - name: Tear down
         if: always()
         run: |
