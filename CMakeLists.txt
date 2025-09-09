@@ -10,3 +10,5 @@ include_directories(include)
 # Include each service's CMakeLists.txt
 add_subdirectory(ServiceB)
 add_subdirectory(ServiceA)
+add_subdirectory(ServiceC)
+add_subdirectory(ServiceD)
