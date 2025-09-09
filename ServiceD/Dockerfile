@@ -1,4 +1,4 @@
-From ghcr.io/st3ff3nbusch/sevice:latest
+From ghcr.io/st3ff3nbusch/service:latest
 # FROM fedora:40
 
 # RUN dnf -y install git cmake make gcc-c++ libstdc++-devel

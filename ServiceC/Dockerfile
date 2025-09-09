@@ -1,5 +1,4 @@
-#From ghcr.io/st3ff3nbusch/sevice:latest
-
+FROM ghcr.io/st3ff3nbusch/service:latest
 
 
 WORKDIR /app

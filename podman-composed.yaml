@@ -4,6 +4,8 @@ services:
     build:
       context: ./ServiceA
       dockerfile: Dockerfile
+    # ports:
+    #   - "4000:4000"
     network_mode: host
     depends_on:
       - serviceb
@@ -11,16 +13,23 @@ services:
     build:
       context: ./ServiceB
       dockerfile: Dockerfile
+    # ports:
+    #   - "4000:4000"
+    network_mode: host
+  serviced:
+    build:
+      context: ./ServiceD
+      dockerfile: Dockerfile
+    # ports:
+    #   - "50051:50051"
     network_mode: host
   servicec:
     build:
       context: ./ServiceC
       dockerfile: Dockerfile
+    # ports:
+    #   - "50051:50051"
     network_mode: host  
     depends_on:
       - serviced
-  serviced:
-    build:
-      context: ./ServiceD
-      dockerfile: Dockerfile
-    network_mode: host
+  

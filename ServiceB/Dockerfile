@@ -1,13 +1,13 @@
 # Use Red Hat UBI 10 base
-FROM registry.access.redhat.com/ubi9/ubi:latest
+# FROM registry.access.redhat.com/ubi9/ubi:latest
 
-# # Install development tools
- RUN dnf install -y \
-     gcc gcc-c++ make \
-     cmake git wget unzip && \
-     dnf clean all
-#From ghcr.io/st3ff3nbusch/sevice:latest
-#RUN dnf install -y wget
+# # # Install development tools
+#  RUN dnf install -y \
+#      gcc gcc-c++ make \
+#      cmake git wget unzip && \
+#      dnf clean all
+From ghcr.io/st3ff3nbusch/service:latest
+RUN dnf install -y wget
 # Create app directory
 WORKDIR /app
 
