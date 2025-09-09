@@ -5,7 +5,7 @@ int main() {
 
     svr.Get("/data", [](const httplib::Request&, httplib::Response& res) {
         cout << "Service B received a request!" << endl;
-        res.set_content("Hello from Service B!", "text/plain");
+        res.set_content("Hello from Service B2!", "text/plain");
     });
 
     svr.listen("0.0.0.0", 4000);

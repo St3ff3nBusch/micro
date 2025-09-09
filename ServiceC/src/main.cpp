@@ -37,6 +37,7 @@ private:
 };
 
 int main() {
+    std::cout<<"ServiceC started"<<std::endl;
     MyServiceClient client(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
     std::string response = client.GetMessage("World");
     std::cout << "ServiceC received: " << response << std::endl;

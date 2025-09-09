@@ -30,6 +30,7 @@ RUN mkdir -p src/proto && \
       --grpc_out=src/proto \
         --plugin=protoc-gen-grpc=/usr/local/bin/grpc_cpp_plugin \
       proto/service.proto
+RUN rm -fR build/*
 RUN cmake -S . -B build && cmake --build build --target service_d -- -j$(nproc)
 
 CMD ["./build/service_d"]
