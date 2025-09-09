@@ -24,7 +24,8 @@ jobs:
 
       - name: Start services with podman-compose
         run: |
-          podman-compose -f podman-composed.yaml up --build
+          podman kill --all
+          podman-compose -f podman-composed.yaml up 
 
       - name: Wait for services to start
         run: sleep 15
