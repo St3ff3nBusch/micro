@@ -2,9 +2,9 @@ name: Microservices CI with Podman on UBI
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   microservices-ci:
