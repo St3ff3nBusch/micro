@@ -1,7 +1,9 @@
 syntax = "proto3";
 
 package micro;
-
+///My first service chceck syntax
+///Request string querry
+///Response string message
 service MyService {
     rpc GetMessage(Request) returns (Response);
 }
