@@ -1,4 +1,4 @@
-name: Microservices CI with Podman on UBI
+name: Microservices CI with Podman
 
 on:
   push:
@@ -9,35 +9,29 @@ on:
 jobs:
   microservices-ci:
     runs-on: ubuntu-latest
-    container:
-      image: registry.access.redhat.com/ubi8/ubi
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Podman, Python 3.9, and podman-compose
+      - name: Install Podman, Python 3, and podman-compose
         run: |
-          yum install -y podman python39 python39-pip git
-          python3.9 -m pip install --user podman-compose
-          export PATH=$PATH:$HOME/.local/bin
-
- 
+          sudo apt-get update
+          sudo apt-get install -y podman python3-pip git
+          pip3 install --user podman-compose
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Start services with podman-compose
         run: |
-          export PATH=$PATH:$HOME/.local/bin
-          podman-compose -f podman-composed.yaml up --build
+          podman-compose -f podman-composed.yaml up --build -d
 
       - name: Wait for services to start
         run: sleep 15
 
       - name: Run integration / health checks
         run: |
-          # Example: check gRPC port (replace with your actual health check)
           curl -f http://localhost:50051 || echo "gRPC service may not have HTTP endpoint"
 
       - name: Tear down
         if: always()
         run: |
-          export PATH=$PATH:$HOME/.local/bin
           podman-compose -f podman-composed.yaml down
