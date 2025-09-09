@@ -1,0 +1,76 @@
+name: Microservices CI with Podman on UBI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  microservices-ci:
+    runs-on: ubuntu-latest
+    container:
+      image: registry.access.redhat.com/ubi8/ubi  # Use UBI 8 base
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Podman, Python, and yq
+        run: |
+          # Install Podman
+          yum install -y podman python3-pip curl git
+          # Install yq to parse YAML
+          pip3 install yq
+
+      - name: Parse podman-compose.yml for services and ports
+        id: parse
+        run: |
+          SERVICES=$(yq e '.services | keys | .[]' podman-compose.yml | tr '\n' ' ')
+          echo "services=$SERVICES" >> $GITHUB_OUTPUT
+
+          # Extract ports
+          declare -A PORTS
+          for svc in $SERVICES; do
+            PORT=$(yq e ".services.$svc.ports[0]" podman-compose.yml | cut -d':' -f1)
+            PORTS[$svc]=$PORT
+          done
+          # Convert to a string for output
+          PORTS_STR=$(for k in "${!PORTS[@]}"; do echo "$k:${PORTS[$k]}"; done | tr '\n' ' ')
+          echo "ports=$PORTS_STR" >> $GITHUB_OUTPUT
+
+      - name: Build all service images
+        run: |
+          for svc in ${{ steps.parse.outputs.services }}; do
+            echo "Building $svc..."
+            podman build -t $svc ./$svc
+          done
+
+      - name: Start services in a Podman pod
+        run: |
+          podman pod create --name microservices-pod
+          # Add port mappings dynamically
+          for mapping in ${{ steps.parse.outputs.ports }}; do
+            svc=${mapping%%:*}
+            port=${mapping##*:}
+            podman pod update --publish ${port}:${port} microservices-pod
+          done
+
+          # Run containers in pod
+          for svc in ${{ steps.parse.outputs.services }}; do
+            podman run -dt --pod microservices-pod $svc
+          done
+
+      - name: Wait for services to start
+        run: sleep 15  # Adjust if services take longer
+
+      - name: Run integration / health checks
+        run: |
+          for mapping in ${{ steps.parse.outputs.ports }}; do
+            svc=${mapping%%:*}
+            port=${mapping##*:}
+            echo "Checking $svc on port $port..."
+            curl -f http://localhost:$port || exit 1
+          done
+
+      - name: Tear down pod
+        run: podman pod rm -f microservices-pod
