@@ -20,21 +20,12 @@ jobs:
           yum install -y podman python3-pip curl git
           pip3 install yq podman-compose
 
-      - name: Build all service images
-        run: |
-          # Example: build ServiceA and ServiceD
-          podman build -t servicea ./ServiceA
-          podman build -t serviced ./ServiceD
-
-      - name: Update podman-composed.yaml to use local images
-        run: |
-          yq -i '.services.servicea.image = "servicea"' podman-composed.yaml
-          yq -i '.services.serviced.image = "serviced"' podman-composed.yaml
+ 
 
       - name: Start services with podman-compose
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          podman-compose -f podman-composed.yaml up -d
+          podman-compose -f podman-composed.yaml up --build
 
       - name: Wait for services to start
         run: sleep 15
