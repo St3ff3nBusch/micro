@@ -15,10 +15,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Podman, Python, and yq
+      - name: Install Podman, Python 3.9, and podman-compose
         run: |
-          yum install -y podman python3-pip curl git
-          pip3 install yq podman-compose
+          yum install -y podman python39 python39-pip git
+          python3.9 -m pip install --user podman-compose
+          export PATH=$PATH:$HOME/.local/bin
 
  
 
