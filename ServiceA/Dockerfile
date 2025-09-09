@@ -1,7 +1,8 @@
 FROM registry.access.redhat.com/ubi9/ubi:latest
 
-RUN dnf groupinstall "Development Tools" -y && \
-    dnf install -y cmake git wget unzip boost-devel && \
+RUN dnf install -y \
+    gcc gcc-c++ make \
+    cmake git wget unzip boost-devel && \
     dnf clean all
 
 WORKDIR /app

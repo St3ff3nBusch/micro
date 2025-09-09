@@ -2,8 +2,9 @@
 FROM registry.access.redhat.com/ubi9/ubi:latest
 
 # Install development tools
-RUN dnf groupinstall "Development Tools" -y && \
-    dnf install -y cmake git wget unzip boost-devel && \
+RUN dnf install -y \
+    gcc gcc-c++ make \
+    cmake git wget unzip boost-devel && \
     dnf clean all
 
 # Create app directory
