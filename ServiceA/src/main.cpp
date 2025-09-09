@@ -3,7 +3,7 @@
 
 int main() {
     httplib::Client cli("http://localhost:4000");
-while(true){
+for(int i=0;i<10;i++)   {
     auto res = cli.Get("/data");
     if (res) {
         std::cout << "Service A received: " << res->body << std::endl;
