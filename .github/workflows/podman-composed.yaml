@@ -37,7 +37,7 @@ jobs:
         id: grpc-test
         run: |
           set -o pipefail
-          podman-compose -f podman-composed.yaml run --rm micro_servicec 2>&1 | tee micro_servicec.log
+          podman-compose -f podman-composed.yaml run --rm micro_servicec_1 2>&1 | tee micro_servicec.log
 
       - name: Check Service C result and report error
         if: failure()  # Only runs if the previous step failed
