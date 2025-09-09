@@ -59,7 +59,9 @@
 <a name="micro-MyService"></a>
 
 ### MyService
-
+My first service chceck syntax
+/Request string querry
+/Response string message
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
